@@ -14,7 +14,7 @@ foreach($hostname in $hostnames){
    
     switch($hostname){
         "app.ichallenge.local" { $directoryPath = ($rootPath + "\IChallenge.App\dist") }
-        "api.ichallenge.local" { $directoryPath = ($rootPath + "\src\Puma.Cykeltaelling.Api") }
+        "api.ichallenge.local" { $directoryPath = ($rootPath + "\IChallenge.Api") }
     }
    
     #navigate to the app pools root
