@@ -52,3 +52,7 @@ typings
 # wwwroot folder
 
 wwwroot
+
+# dist folder
+
+dist

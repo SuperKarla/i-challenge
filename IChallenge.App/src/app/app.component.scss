@@ -1,11 +1,13 @@
+
 body
 {
+    background-color: #E0F7FA;
+
     ichallenge-app
     {
         display: flex;
         min-height: 100vh;
         flex-direction: column;
-
         main
         {
             display: flex;
