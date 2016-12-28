@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Raven.Client;
+using Raven.Client.Document;
 
 namespace IChallenge.Api
 {
@@ -29,6 +27,19 @@ namespace IChallenge.Api
         {
             // Add framework services.
             services.AddMvc();
+
+            // Adds ravendb
+            services.AddTransient((provider) =>
+            {
+                IDocumentStore store = new DocumentStore
+                {
+                    Url = "http://localhost:8080/", // server URL
+                    DefaultDatabase = "Northwind"   // default database
+                };
+
+                store.Initialize();
+                return store.OpenAsyncSession();
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

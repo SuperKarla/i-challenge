@@ -14,7 +14,7 @@ foreach($hostname in $hostnames){
    
     switch($hostname){
         "app.ichallenge.local" { $directoryPath = ($rootPath + "\IChallenge.App\dist") }
-        "api.ichallenge.local" { $directoryPath = ($rootPath + "\IChallenge.Api") }
+        "api.ichallenge.local" { $directoryPath = ($rootPath + "\IChallenge.Api\bin\Debug\netcoreapp1.0\publish") }
     }
    
     #navigate to the app pools root

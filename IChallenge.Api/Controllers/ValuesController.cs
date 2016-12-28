@@ -1,44 +1,87 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using IChallenge.Api.Models;
 using Microsoft.AspNetCore.Mvc;
+using Raven.Client;
 
 namespace IChallenge.Api.Controllers
 {
     [Route("api/[controller]")]
     public class ValuesController : Controller
     {
+        private IAsyncDocumentSession _session;
+
+
+        public ValuesController(IAsyncDocumentSession session)
+        {
+            this._session = session;
+        }
+
         // GET api/values
         [HttpGet]
-        public IEnumerable<string> Get()
+        public IActionResult Get()
         {
-            return new string[] { "value1", "value2" };
+            return Ok(_session.Query<Challenge>());
         }
 
         // GET api/values/5
-        [HttpGet("{id}")]
-        public string Get(int id)
+        [HttpGet("{id}", Name = "GetChallenge" )]
+        public async Task<IActionResult> Get(string id)
         {
-            return "value";
+            Challenge result;
+            result = await _session.LoadAsync<Challenge>(id);
+
+            if (result == null)
+                return NotFound();
+
+            return Ok(result);
         }
 
         // POST api/values
         [HttpPost]
-        public void Post([FromBody]string value)
+        public async Task<IActionResult> Post([FromBody]Challenge value)
         {
+            await _session.StoreAsync(value);
+            await _session.SaveChangesAsync();
+            return CreatedAtRoute("GetChallenge", new { id = value.Id }, value);
         }
 
         // PUT api/values/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody]string value)
+        public async Task<IActionResult> Put(int id, [FromBody]Challenge value)
         {
+            Challenge existing;
+
+            existing = await _session.LoadAsync<Challenge>(id);
+
+            if (existing == null)
+            {
+                return NotFound();
+            }
+
+            existing.Name = value.Name;
+            existing.Description = value.Description;
+            await _session.SaveChangesAsync();
+
+            return Ok();
         }
 
         // DELETE api/values/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public async Task<IActionResult> Delete(string id)
         {
+            Challenge existing;
+
+            existing = await _session.LoadAsync<Challenge>(id);
+
+            if(existing == null)
+            {
+                return NotFound();
+            }
+
+            _session.Delete(existing);
+            await _session.SaveChangesAsync();
+
+            return NoContent();
         }
     }
 }
