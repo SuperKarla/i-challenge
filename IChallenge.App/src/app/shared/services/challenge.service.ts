@@ -13,7 +13,7 @@ export class ChallengeService {
     public get(): Observable<Challenge[]>
     public get(id?: string): any 
     {
-        return id ? this._http.get(`config.challengeApi/${id}`).map<Response,Challenge>((r:Response)=>{
+        return id ? this._http.get(`${config.challengeApi}/${id}`).map<Response,Challenge>((r:Response)=>{
             return r.json();
         }) : this._http.get(config.challengeApi).map<Response,Challenge>((r:Response)=>{
             return r.json();
@@ -30,6 +30,6 @@ export class ChallengeService {
 
     public delete(id:string):Observable<Response>
     {
-        return this._http.delete(`config.challengeApi/${id}`);
+        return this._http.delete(`${config.challengeApi}/${id}`);
     }
 }
